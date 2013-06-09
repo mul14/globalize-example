@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <p>
+        Culture
+        <label><input type="radio" name="culture" value="id" checked> Indonesia </label>
+        <label><input type="radio" name="culture" value="as"> India </label>
+        <label><input type="radio" name="culture" value="ms"> Malaysia </label>
+        <label><input type="radio" name="culture" value="en"> United States </label>
+    </p>
+
+    <p class="currency">
+        Currency
+        <input type="money" class="input" value="1240000" maxlength="16" />
+        <span class="output"></span>
+    </p>
+
+    <p class="date">
+        Date
+        <input type="date" class="input" value="" />
+        <span class="output"></span>
+    </p>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="globalize/lib/globalize.js"></script>
+<script src="globalize/lib/cultures/globalize.culture.id.js"></script>
+<script src="globalize/lib/cultures/globalize.culture.as.js"></script>
+<script src="globalize/lib/cultures/globalize.culture.ms.js"></script>
+<script>
+// Default culture
+Globalize.culture('id');
+
+function init() {
+    // Init money
+    money = $('.currency .input').val();
+    $('.currency .output').text(Globalize.format(parseInt(money), 'c'));
+
+    // Today
+    today = new Date().toJSON().slice(0,10);
+    $('.date .input').val(today);
+    output = Globalize.format(new Date(today), "F");
+    $('.date .output').text(output);
+}
+
+$(function(){
+    init();
+
+    $('[name="culture"]').change(function(){
+        Globalize.culture($(this).val());
+        init();
+        console.log(Globalize.culture().name);
+    })
+
+    $('.currency .input').keyup(function(){
+        value = $(this).val();
+        if (value != '') {
+            output = Globalize.format( parseInt(value), "c" );
+            $(this).siblings('.output').text(output);
+        } else {
+            $(this).siblings('.output').text('');
+        }
+    })
+
+    $('.date .input').change(function(){
+        value = $(this).val();
+        output = Globalize.format(new Date(value), "F");
+        $(this).siblings('.output').text(output);
+    })
+
+});
+</script>
+</body>
+</html>
